@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "nodemon index.js"
+    "test": "mocha test/ --recursive --exit",
+    "serve": "nodemon src/index.js"
   },
   "author": "",
   "license": "ISC",
