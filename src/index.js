@@ -26,6 +26,19 @@ app.post('/config', (req, res) => {
       client.close();
     });
 });
+app.get('/config', (req, res) => {
+  MongoClient.connect(credentials.url, { useNewUrlParser: true }, (err, client) => {
+      const collection = client.db(credentials.db).collection('nativeMongo');
+      collection.find({...req.query}).toArray((err, result) => {
+        if (!err) {
+          res.send(result);
+        } else {
+          res.send('Error querying')
+        }
+        client.close()
+      });
+  });
+});
 
 app.get('/config/:id', (req, res) => {
     MongoClient.connect(credentials.url, { useNewUrlParser: true }, (err, client) => {
@@ -44,7 +57,7 @@ app.get('/config/:id', (req, res) => {
 app.patch('/config/:id', (req, res) => {
     MongoClient.connect(credentials.url, { useNewUrlParser: true }, (err, client) => {
         const collection = client.db(credentials.db).collection('nativeMongo');
-        collection.insertOne({test: 'a', test2: 'b'}, (err, result) => {
+        collection.findAndModify({ _id: ObjectId(req.params.id) }, null, { ...req.body }, (err, result) => {
           if(!err) {
             res.send(result);
           } else {
